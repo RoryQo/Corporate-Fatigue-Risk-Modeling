@@ -147,16 +147,128 @@ To check for bias, we analyzed **average values of the top 10 burnout predictors
 This suggests that **gender and remote work do not directly or indirectly influence burnout risk**.
 
 ### **Policy Effect Simulation**  
-To test the effect of **reducing burnout predictors**, we simulated a **20% reduction in the top two burnout predictors (Marital Status: Widowed & Working in Sales).**  
 
-- **For binary predictors**, we randomly selected **20% of cases labeled as "1"** and set them to **0** to simulate policy impact.  
-- After this **policy intervention**, the model predicted only a **0.27% reduction in burnout symptoms**.  
+If the company could design a policy that reduces the 2 strongest predictors of burnout (from Q2) by twenty percent, how would this affect your prediction? How effective would this policy be?
 
-This minimal effect suggests **burnout is a multifaceted issue that cannot be significantly reduced by only addressing two factors.**  
-A more **holistic approach** is required to meaningfully reduce burnout.
+**`1.`** **Simulate a 20% Reduction in These Predictors**
+Gender Discrimination: A workplace policy aimed at reducing discrimination, improving inclusivity, and enforcing strict anti-discrimination measures.
+Job Satisfaction: Initiatives such as better compensation, improved work-life balance, career development opportunities, and management support.
+To simulate this, we modify the dataset by reducing the values of these features by 20% while ensuring that the changes remain realistic and within the data’s distribution.
+**Note:** Since we scaled the data to run neural networks and SVMs all the variables are numeric, and can be reduced this way. & that reducing predictors might not be the correct direction depending on the predictor, i.e. reducing sleep hours would actually increase burnout because the relationship is more sleep is correlated with less burnout.
+
+```
+# Apply a 20% reduction for non-binary features
+for feature in top_predictors:
+    if feature in X_test_policy.columns:
+        # Reduce all values by 20% proportionally
+        X_test_policy[feature] *= 0.8
+        print(f" Reduced {feature} by 20%")
+```
+
+**`2.`** **Re-run Burnout Predictions**
+Using the modified dataset with reduced burnout risk factors, we re-run predictions with our KNN model and compare the new burnout rate to the original predictions.
+
+```
+# Predict burnout before and after policy
+y_pred_original = best_knn.predict(X_test)
+y_pred_policy = best_knn.predict(X_test_policy)
+```
 
 <p align="center">
   <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/PolicyEval.png" 
-       alt="Policy Evaluation Impact" width="600px">
+       alt="Policy Evaluation Impact" width="700px">
 </p>
+
+**`3.`** **Evaluate Effectiveness**
+If the burnout prediction rate decreases significantly, the policy is effective.
+If the model still predicts high burnout, other factors may be driving stress in the workplace.
+We measure effectiveness using F1-score improvement and relative reduction in predicted burnout cases.
+
+Model Performance Comparison
+
+
+
+<p align="center">
+  <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/Diff.png" 
+       alt="Difference in Burnout Prediction" width="500px">
+</p>
+
+
+<div align="center">
+
+<table>
+  <tr>
+    <th colspan="4"><strong>Original Model Performance</strong></th>
+    <th colspan="4"><strong>Policy-Adjusted Model Performance</strong></th>
+  </tr>
+  <tr>
+    <th>Metric</th>
+    <th>Precision</th>
+    <th>Recall</th>
+    <th>F1-Score</th>
+    <th>Metric</th>
+    <th>Precision</th>
+    <th>Recall</th>
+    <th>F1-Score</th>
+  </tr>
+  <tr>
+    <td>False</td>
+    <td>0.32</td>
+    <td>0.20</td>
+    <td>0.25</td>
+    <td>False</td>
+    <td>0.33</td>
+    <td>0.21</td>
+    <td>0.26</td>
+  </tr>
+  <tr>
+    <td>True</td>
+    <td>0.66</td>
+    <td>0.78</td>
+    <td>0.72</td>
+    <td>True</td>
+    <td>0.67</td>
+    <td>0.79</td>
+    <td>0.72</td>
+  </tr>
+  <tr>
+    <td>Accuracy</td>
+    <td colspan="3">0.59</td>
+    <td>Accuracy</td>
+    <td colspan="3">0.59</td>
+  </tr>
+  <tr>
+    <td>Macro Avg</td>
+    <td>0.49</td>
+    <td>0.49</td>
+    <td>0.48</td>
+    <td>Macro Avg</td>
+    <td>0.50</td>
+    <td>0.50</td>
+    <td>0.49</td>
+  </tr>
+  <tr>
+    <td>Weighted Avg</td>
+    <td>0.55</td>
+    <td>0.59</td>
+    <td>0.56</td>
+    <td>Weighted Avg</td>
+    <td>0.55</td>
+    <td>0.59</td>
+    <td>0.57</td>
+  </tr>
+  <tr>
+    <td colspan="4"><strong>Original Predicted Burnout Rate: 0.7887</strong></td>
+    <td colspan="4"><strong>Predicted Burnout Rate After Policy: 0.7864</strong></td>
+  </tr>
+</table>
+
+</div>
+
+
+**`4.`** **Conclude**
+This minimal effect suggests **burnout is a complex and multifaceted issue that cannot be significantly reduced by only addressing two factors.**  
+A more **holistic approach** is required to meaningfully reduce burnout.
+
+
 

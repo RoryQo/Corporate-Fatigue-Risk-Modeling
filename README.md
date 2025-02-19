@@ -69,8 +69,8 @@ grid_search.fit(X_train, y_train)
 ```
 
 ### **Model Evaluation**  
-Initial testing with **Naïve Bayes and SVM** revealed that accuracy alone was not a good evaluation metric. Due to class imbalance, models favored predicting "No Burnout," leading to misleadingly high accuracy scores.  
-- **Example:** Naïve Bayes predicted almost exclusively "No Burnout" cases.  
+Initial testing with **Naïve Bayes and SVM** revealed that accuracy alone was not a good evaluation metric. Since burnout symptoms are less frequent in the dataset, a model focusing too heavily on the majority class would appear to perform well in terms of accuracy but would fail to correctly predict those who do experience burnout symptoms. This imbalance led us to focus on the weighted F1 score, which better accounts for both precision and recall across classes.
+- **Example:** Naïve Bayes exclusively predicted "Burnout" cases.  
 
 To address this, we **shifted our focus to the weighted F1-score**, which balances precision and recall across classes.
 
@@ -94,7 +94,7 @@ To address this, we **shifted our focus to the weighted F1-score**, which balanc
 ## **Results**  
 
 ### **Key Features**  
-To retrieve feature importance results, we used permutation-based feature importance to measure how much each predictor contributes to burnout predictions. This method involves randomly shuffling a single feature's values while keeping all others intact, then observing the resulting drop in model performance. To ensure robustness, we applied 5-fold cross-validation when computing permutation importance scores, ensuring that feature contributions remained consistent across different subsets of data. The XGBoost model has a built-in feature importance, which ranks features based on how much they improve decision tree splits.
+To retrieve feature importance results, we used permutation-based feature importance to measure how much each predictor contributes to burnout predictions. This method involves randomly shuffling a single feature's values while keeping all others intact, then observing the resulting drop in model performance. To ensure robustness, we applied 5-fold cross-validation when computing permutation importance scores, ensuring that feature contributions remained consistent across different subsets of data. The XGBoost model has a built-in feature importance, which ranks features based on how much they improve decision tree splits. An alternative that will be considered in the future is absolute SHAP values, which is a scoring method to retreive factor importance from all types of models.
 
 ```
 # Compute permutation importance
@@ -148,7 +148,7 @@ This suggests that **gender and remote work do not directly or indirectly influe
 
 ### **Policy Effect Simulation**  
 
-If the company could design a policy that reduces the 2 strongest predictors of burnout (from Q2) by twenty percent, how would this affect your prediction? How effective would this policy be?
+If the company could design a policy that reduces the 2 strongest predictors of burnout by twenty percent, how would this affect your prediction? How effective would this policy be? These factors will be taken from the SHAP values test.
 
 **`1.`** **Simulate a 20% Reduction in These Predictors**
 Gender Discrimination: A workplace policy aimed at reducing discrimination, improving inclusivity, and enforcing strict anti-discrimination measures.
@@ -267,8 +267,7 @@ Model Performance Comparison
 
 
 **`4.`** **Conclude**
-This minimal effect suggests **burnout is a complex and multifaceted issue that cannot be significantly reduced by only addressing two factors.**  
-A more **holistic approach** is required to meaningfully reduce burnout.
+This minimal effect suggests **burnout is a complex and multifaceted issue that cannot be significantly reduced by only addressing two factors.** A more **holistic approach** is required to meaningfully reduce burnout.
 
 
 

@@ -1,2 +1,162 @@
 # Corporate-Fatigue-Risk-Modeling
-A machine learning-driven project for analyzing and predicting workplace stress and burnout risk to support employee well-being and policy decisions.
+
+
+This project predicts burnout symptoms in workers using machine learning models. It identifies the strongest predictors of burnout, examines potential biases related to gender and remote work, and simulates a policy intervention targeting top predictors.
+
+## **Methodology**  
+
+### **Data Processing**  
+Before modeling, the dataset was cleaned and preprocessed:  
+- Workers who reported **occasional burnout symptoms** were **encoded as "Yes"**, allowing for **binary classification**.
+   Additionally, indicating health issues was encoded to yes to create binary classification, saving overall data set dimensionality when we encode the rest of the categorical variables with dummies.
+
+```
+# For binary encoding include the occasional symptoms to the yes category
+# Reducing Dimensionality
+df["Burnout_Symptoms"] = df["Burnout_Symptoms"].replace("Occasional", "Yes")
+
+df["Health_Issues"] = df["Health_Issues"].replace("Both", "Yes")
+df["Health_Issues"] = df["Health_Issues"].replace("Physical", "Yes")
+df["Health_Issues"] = df["Health_Issues"].replace("Mental", "Yes")
+```
+
+- Not having **health issues** was originally coded as **"na"**, we will replace with **"No"** for future modeling processes.
+
+- Use label encoding for company size, instead of dummies to reduce dimensionality and keep it as an ordinal variable
+```
+# Label encode bc size is ordinal 
+#Initialize LabelEncoder
+label_encoder = LabelEncoder()
+
+# Encode a specific column (e.g., "Category_Column")
+df["Company_Size"] = label_encoder.fit_transform(df["Company_Size"])
+```
+
+  
+- **One-hot encoding (dummy variables)** was applied to all remaining categorical variables.  
+
+
+### **Model Creation**  
+We trained and evaluated multiple machine learning models:  
+- **k-Nearest Neighbors (KNN)**
+- **Naïve Bayes (NB)**
+- **Support Vector Machine (SVM)**
+- **Random Forest**
+- **XGBoost**
+- **Neural Networks**
+
+Each model was optimized using **grid search** for hyperparameter tuning and **5-fold cross-validation** to ensure robustness on unseen data.
+
+- Example code with the neural network
+```
+# Define hyperparameters to tune
+param_grid = {
+    'hidden_layer_sizes': [(64,), (128,)],  # Different layer architectures
+    'activation': ['relu'],  # Try different activation functions
+    'solver': ['adam'],  # Optimizers: Adam vs. SGD
+    'alpha': [0.0001],  # Regularization strength
+    'learning_rate': ['constant', ]  # Learning rate strategies
+}
+
+# Initialize MLP Classifier
+mlp = MLPClassifier(max_iter=200, random_state=42)
+
+# Grid Search with Cross-Validation (5-fold)
+grid_search = GridSearchCV(mlp, param_grid, cv=5, scoring='f1_weighted', n_jobs=-1, verbose=1)
+
+# Fit the model on training data
+grid_search.fit(X_train, y_train)
+```
+
+### **Model Evaluation**  
+Initial testing with **Naïve Bayes and SVM** revealed that accuracy alone was not a good evaluation metric. Due to class imbalance, models favored predicting "No Burnout," leading to misleadingly high accuracy scores.  
+- **Example:** Naïve Bayes predicted almost exclusively "No Burnout" cases.  
+
+To address this, we **shifted our focus to the weighted F1-score**, which balances precision and recall across classes.
+
+### **Model Selection & Computational Time**  
+- **Initially, we tested simple models** like **KNN** and **Naïve Bayes**, assuming that **more complex models would perform better**.
+- However, **despite extensive hyperparameter tuning, models like SVM, Random Forest, XGBoost, and Neural Networks did not outperform KNN**. Some performed even worse.
+
+<p align="center">
+  <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/Modelf1comp.jpg" alt="Model Performance Comparison" width="600px">
+</p>
+
+- **Computational time was also a major factor.**  
+  - While all models had reasonable runtimes, **Neural Networks and SVM were significantly more expensive computationally**.
+  - **KNN proved to be the simplest, fastest, and most effective model**, making it the best choice for predicting burnout.
+
+<p align="center">
+  <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/ModelCompTimes.jpg" alt="Model Computation Time Comparison" width="600px">
+</p>
+
+
+## **Results**  
+
+### **Key Features**  
+To retrieve feature importance results, we used permutation-based feature importance to measure how much each predictor contributes to burnout predictions. This method involves randomly shuffling a single feature's values while keeping all others intact, then observing the resulting drop in model performance. To ensure robustness, we applied 5-fold cross-validation when computing permutation importance scores, ensuring that feature contributions remained consistent across different subsets of data. The XGBoost model has a built-in feature importance, which ranks features based on how much they improve decision tree splits.
+
+```
+# Compute permutation importance
+result = permutation_importance(best_knn, X_test, y_test, scoring='f1_weighted', n_repeats=5, random_state=42)
+
+# Get feature importances from XGBoost
+feature_importances = best_xgboost.feature_importances_
+```
+
+The most important predictors of burnout symptoms in the **KNN model** included:  
+- **Marital Status (Widowed)**
+- **Department (Sales, Marketing, HR)**
+- **Location**
+- **Years of Experience**
+- **Job Satisfaction**
+
+  <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/knnimp.png" 
+       alt="KNN Feature Importance" width="600px">
+
+
+**Neural Networks & XGBoost independently confirmed these findings** while also identifying:  
+- **Physical Activity Levels**  
+- **Health Issues**
+
+Interestingly, **Remote Work and Gender were not significant predictors of burnout**.  
+However, the **Neural Network model found that experiencing gender discrimination was the single most important predictor of burnout**.
+
+<img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/MLPImp.png" 
+       alt="MLP Feature Importance" width="500px">
+<img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/xgimport.jpg" 
+       alt="XGBoost Feature Importance" width="500px">
+  
+
+### **Bias in Gender and Remote Work**  
+To check for bias, we analyzed **average values of the top 10 burnout predictors by gender**.  
+- No significant differences were found, **suggesting gender was not a direct factor in predicting burnout symptoms**.
+
+<p align="center">
+  <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/Gender.jpg" 
+       alt="Gender Analysis" width="600px">
+</p>
+  
+- A similar analysis was conducted for **remote work status**, which also showed no meaningful differences.  
+
+<p align="center">
+  <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/Remotework.jpg" 
+       alt="Gender Analysis" width="600px">
+</p>
+
+This suggests that **gender and remote work do not directly or indirectly influence burnout risk**.
+
+### **Policy Effect Simulation**  
+To test the effect of **reducing burnout predictors**, we simulated a **20% reduction in the top two burnout predictors (Marital Status: Widowed & Working in Sales).**  
+
+- **For binary predictors**, we randomly selected **20% of cases labeled as "1"** and set them to **0** to simulate policy impact.  
+- After this **policy intervention**, the model predicted only a **0.27% reduction in burnout symptoms**.  
+
+This minimal effect suggests **burnout is a multifaceted issue that cannot be significantly reduced by only addressing two factors.**  
+A more **holistic approach** is required to meaningfully reduce burnout.
+
+<p align="center">
+  <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/PolicyEval.png" 
+       alt="Policy Evaluation Impact" width="600px">
+</p>
+

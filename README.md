@@ -158,9 +158,9 @@ Interestingly, **Remote Work and Gender were not significant predictors of burno
 However, the **Neural Network model found that experiencing gender discrimination was the single most important predictor of burnout**.
 
 <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/MLPImp.png" 
-       alt="MLP Feature Importance" width="450px">
+       alt="MLP Feature Importance" width="300px">
 <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/xgimport.jpg" 
-       alt="XGBoost Feature Importance" width="450px">
+       alt="XGBoost Feature Importance" width="300px">
   
 
 ### **Bias in Gender and Remote Work**  

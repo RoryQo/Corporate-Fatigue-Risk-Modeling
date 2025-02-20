@@ -181,7 +181,7 @@ To check for bias, we analyzed **average values of the top 10 burnout predictors
 
 This suggests that **gender and remote work do not directly or indirectly influence burnout risk**.
 
-### **Policy Effect Simulation**  
+## **Future Policy Effect Simulation**  
 
 If the company could design a policy that reduces the 2 strongest predictors of burnout by twenty percent, how would this affect your prediction? How effective would this policy be? These factors will be taken from the SHAP values test.
 
@@ -304,7 +304,7 @@ Model Performance Comparison
 **`4.`** **Conclude**
 This minimal effect suggests **burnout is a complex and multifaceted issue that cannot be significantly reduced by only addressing two factors.** A more **holistic approach** is required to meaningfully reduce burnout.
 
-### **Discussion**  
+## **Discussion**  
 
 The findings from our models suggest that **burnout prediction remains a challenging task** given the available features. Our selected **KNN model achieved an accuracy in the low 60s**, which indicates **only marginal predictive power**. 
 

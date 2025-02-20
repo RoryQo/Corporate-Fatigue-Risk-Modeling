@@ -315,8 +315,9 @@ The **low Cramér's V and Spearman correlation scores** further confirm that **m
 Additionally, the **simulated policy intervention, which aimed to reduce the two strongest predictors of burnout, had minimal impact on overall burnout rates**. This further reinforces the idea that **burnout is a multifaceted, complex issue** that cannot be easily addressed by targeting a few individual factors.
 
 ### **Future Considerations**  
-- Exploring **nonlinear interactions and feature engineering** to capture hidden patterns.
-- Incorporating **external data** (such as workplace policies or mental health history) for a richer model.
+- Encoding and scaling variables differently
+  + Encoding occasional burnout to "no" category, or dropping them altogether
+  + Refitting trees and Knn with min-max scaling or no scaling in the data
 - Testing **deep learning approaches** that might better capture subtle relationships.
 
 Ultimately, **burnout is not driven by a single factor but rather by a combination of workplace, personal, and societal influences.** Any meaningful intervention will likely require **holistic solutions rather than isolated policy changes.**

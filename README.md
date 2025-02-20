@@ -157,11 +157,14 @@ The most important predictors of burnout symptoms in the **KNN model** included:
 Interestingly, **Remote Work and Gender were not significant predictors of burnout**.  
 However, the **Neural Network model found that experiencing gender discrimination was the single most important predictor of burnout**.
 
+
+<p align="center">
+
 <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/MLPImp.png" 
-       alt="MLP Feature Importance" width="300px">
+       alt="MLP Feature Importance" width="350px">
 <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/xgimport.jpg" 
-       alt="XGBoost Feature Importance" width="300px">
-  
+       alt="XGBoost Feature Importance" width="350px">
+</p>  
 
 ### **Bias in Gender and Remote Work**  
 To check for bias, we analyzed **average values of the top 10 burnout predictors by gender**.  

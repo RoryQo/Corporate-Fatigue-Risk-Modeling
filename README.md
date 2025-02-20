@@ -3,6 +3,41 @@
 
 This project predicts burnout symptoms in workers using machine learning models. It identifies the strongest predictors of burnout, examines potential biases related to gender and remote work, and simulates a policy intervention targeting top predictors.
 
+
+## **Exploratory Data Analysis (EDA)**  
+
+Before modeling, we conducted **exploratory data analysis (EDA)** to understand the distribution of features and relationships between variables.
+
+### **Numeric Variables**  
+- Most **numeric variables exhibited uniform distributions**, suggesting **no strong skewness or natural clustering**.  
+- This indicates that **burnout symptoms do not correlate with specific numeric thresholds**, making direct predictions based on individual numeric features challenging.
+<p align="center">
+ <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/Dist.png" 
+       alt="Distribution of Numeric Variables" width="600px"> 
+</p>
+
+### **Categorical Variables**  
+- We examined **categorical feature relationships** using **Cramér's V** and **correlation heatmaps**.  
+- The results showed **low correlations between categorical variables**, meaning **no single category strongly influenced another**.  
+- **Cramer V tests** between categorical variables and the target variable (**burnout symptoms**) **showed little correlation**, suggesting that achieving **high model accuracy might be difficult** due to weak direct relationships.  
+
+<div align="center">
+
+| **Feature**         | **Cramér's V** |
+|---------------------|---------------|
+| Gender             | 0.0053        |
+| Marital Status     | 0.0024        |
+| Job Role          | 0.0022        |
+| Health Issues      | 0.0023        |
+| Company Size       | 0.0000        |
+| Department         | 0.0000        |
+| Location          | 0.0000        |
+
+</div>
+
+These findings **suggest that burnout prediction requires more than just simple linear associations** and that models will need to **capture non-linear relationships and complex interactions between features** to improve performance.
+**Note:** These are initial findings before data wrangling, like feature scaling and dummy variable creation
+
 ## **Methodology**  
 
 ### **Data Processing**  
@@ -269,5 +304,21 @@ Model Performance Comparison
 **`4.`** **Conclude**
 This minimal effect suggests **burnout is a complex and multifaceted issue that cannot be significantly reduced by only addressing two factors.** A more **holistic approach** is required to meaningfully reduce burnout.
 
+### **Discussion**  
+
+The findings from our models suggest that **burnout prediction remains a challenging task** given the available features. Our selected **KNN model achieved an accuracy in the low 60s**, which indicates **only marginal predictive power**. 
+
+The **low Cramér's V and Spearman correlation scores** further confirm that **most features have little direct predictive influence on burnout symptoms**. This suggests two possibilities:  
+1. **The features provided may not be strong predictors of burnout.** Other unmeasured variables (such as workplace culture, managerial support, or mental health history) may play a greater role.
+2. **More complex relationships may exist.** There could be **nonlinear interactions** between features, which simple models fail to capture.
+
+Additionally, the **simulated policy intervention, which aimed to reduce the two strongest predictors of burnout, had minimal impact on overall burnout rates**. This further reinforces the idea that **burnout is a multifaceted, complex issue** that cannot be easily addressed by targeting a few individual factors.
+
+### **Future Considerations**  
+- Exploring **nonlinear interactions and feature engineering** to capture hidden patterns.
+- Incorporating **external data** (such as workplace policies or mental health history) for a richer model.
+- Testing **deep learning approaches** that might better capture subtle relationships.
+
+Ultimately, **burnout is not driven by a single factor but rather by a combination of workplace, personal, and societal influences.** Any meaningful intervention will likely require **holistic solutions rather than isolated policy changes.**
 
 

@@ -159,11 +159,10 @@ However, the **Neural Network model found that experiencing gender discriminatio
 
 
 <p align="center">
-
 <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/MLPImp.png" 
-       alt="MLP Feature Importance" width="350px">
+       alt="MLP Feature Importance" width="400x">
 <img src="https://github.com/RoryQo/Corporate-Fatigue-Risk-Modeling/blob/main/Visualizations/xgimport.jpg" 
-       alt="XGBoost Feature Importance" width="350px">
+       alt="XGBoost Feature Importance" width="400px">
 </p>  
 
 ### **Bias in Gender and Remote Work**  

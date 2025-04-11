@@ -1,5 +1,5 @@
 # Corporate-Fatigue-Risk-Modeling 
-
+ 
 
 This project predicts burnout symptoms in workers using machine learning models. It identifies the strongest predictors of burnout, examines potential biases related to gender and remote work, and simulates a policy intervention targeting top predictors.
 
